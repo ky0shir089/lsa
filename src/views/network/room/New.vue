@@ -1,0 +1,156 @@
+<template>
+  <v-container fluid>
+    <app-bar />
+
+    <v-app-bar app color="primary" v-if="$vuetify.breakpoint.xs">
+      <v-btn icon dark @click.stop="$router.go(-1)">
+        <v-icon>mdi-arrow-left-circle</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-row>
+      <v-col cols="12" sm="6">
+        <div class="text-h5 mb-4">{{ $route.name }}</div>
+
+        <v-form ref="form" v-model="valid">
+          <v-autocomplete
+            v-model="form.outlet_id"
+            label="Nama Titik"
+            :items="outlets"
+            item-text="outlet_name"
+            item-value="id"
+            outlined
+            dense
+            hide-selected
+            :rules="formRules"
+          ></v-autocomplete>
+
+          <v-text-field
+            v-model="form.room_floor"
+            type="number"
+            label="Lantai"
+            outlined
+            dense
+            :min="1"
+            :max="9"
+            :rules="formRules"
+          ></v-text-field>
+
+          <v-text-field
+            v-model="form.room_name"
+            label="Ruangan"
+            outlined
+            dense
+            :rules="formRules"
+          ></v-text-field>
+        </v-form>
+
+        <v-btn
+          block
+          color="primary"
+          :loading="loading"
+          :disabled="!valid"
+          @click="store"
+        >
+          <v-icon left>mdi-content-save</v-icon>
+          SAVE
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+  name: "NewRoom",
+  components: {
+    AppBar: () =>
+      import(/* webpackChunkName: "alert" */ "@/components/AppBar.vue"),
+  },
+  data: () => ({
+    valid: true,
+    form: {
+      outlet_id: "",
+      room_floor: "",
+      room_name: "",
+    },
+    formRules: [(v) => !!v || "Field is required"],
+    outlets: [],
+    loading: false,
+  }),
+  computed: {
+    ...mapGetters({
+      access_token: "token/token",
+    }),
+  },
+  methods: {
+    ...mapActions({
+      setAlert: "alert/set",
+    }),
+    async getOutlet() {
+      await this.axios
+        .get("network/v1/outlet", {
+          headers: {
+            Authorization: "Bearer " + this.access_token,
+          },
+          params: {
+            status: "ACTIVE",
+          },
+        })
+        .then((response) => {
+          let { data } = response.data;
+          this.outlets = data;
+        })
+        .catch((error) => {
+          let responses = error.response.data;
+          this.setAlert({
+            status: true,
+            color: "error",
+            text: responses.message,
+          });
+        });
+    },
+    async store() {
+      this.loading = true;
+
+      let formData = new FormData();
+      formData.set("outlet_id", this.form.outlet_id);
+      formData.set("room_floor", this.form.room_floor);
+      formData.set("room_name", this.form.room_name.toUpperCase());
+
+      await this.axios
+        .post("network/v1/store-room", formData, {
+          headers: {
+            Authorization: "Bearer " + this.access_token,
+          },
+        })
+        .then((response) => {
+          let { data } = response;
+          this.setAlert({
+            status: true,
+            color: "success",
+            text: data.message,
+          });
+          this.$router.go(-1);
+        })
+        .catch((error) => {
+          let responses = error.response.data;
+          this.setAlert({
+            status: true,
+            color: "error",
+            text: responses.message,
+          });
+          this.loading = false;
+        });
+    },
+  },
+  async created() {
+    await this.getOutlet();
+  },
+};
+</script>
+
+<style>
+</style>
