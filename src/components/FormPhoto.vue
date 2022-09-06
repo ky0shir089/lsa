@@ -116,7 +116,11 @@
                     @input="setImage('photo1')"
                     id="photo1"
                   >
-                    <label for="photo1" slot="upload-label">
+                    <label
+                      for="photo1"
+                      slot="upload-label"
+                      style="cursor: pointer"
+                    >
                       <v-icon>mdi-camera</v-icon>
                       <br />
                       <span class="upload-caption">
@@ -149,7 +153,11 @@
                     @input="setImage('photo2')"
                     id="photo2"
                   >
-                    <label for="photo2" slot="upload-label">
+                    <label
+                      for="photo2"
+                      slot="upload-label"
+                      style="cursor: pointer"
+                    >
                       <v-icon>mdi-camera</v-icon>
                       <br />
                       <span class="upload-caption">
@@ -182,7 +190,11 @@
                     @input="setImage('photo3')"
                     id="photo3"
                   >
-                    <label for="photo3" slot="upload-label">
+                    <label
+                      for="photo3"
+                      slot="upload-label"
+                      style="cursor: pointer"
+                    >
                       <v-icon>mdi-camera</v-icon>
                       <br />
                       <span class="upload-caption">
@@ -215,7 +227,11 @@
                     @input="setImage('photo4')"
                     id="photo4"
                   >
-                    <label for="photo4" slot="upload-label">
+                    <label
+                      for="photo4"
+                      slot="upload-label"
+                      style="cursor: pointer"
+                    >
                       <v-icon>mdi-camera</v-icon>
                       <br />
                       <span class="upload-caption">
@@ -248,7 +264,11 @@
                     @input="setImage('photo5')"
                     id="photo5"
                   >
-                    <label for="photo5" slot="upload-label">
+                    <label
+                      for="photo5"
+                      slot="upload-label"
+                      style="cursor: pointer"
+                    >
                       <v-icon>mdi-camera</v-icon>
                       <br />
                       <span class="upload-caption">
@@ -370,7 +390,9 @@ export default {
     },
     selectType() {
       let type = this.types.filter((item) => item.id == this.form.photo_id)[0];
-      let check = this.unit.photos.filter((item) => this.form.photo_id == item.photo_id);
+      let check = this.unit.photos.filter(
+        (item) => this.form.photo_id == item.photo_id
+      );
       if (check.length > 0 && type.updateable == "NO") {
         this.$nextTick(() => {
           this.form.photo_id = "";

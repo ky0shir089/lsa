@@ -17,7 +17,7 @@
             <v-col cols="3">
               <v-text-field
                 v-model="form.supplier_id"
-                label="ID"
+                label="Supl ID"
                 outlined
                 dense
                 readonly
@@ -41,7 +41,7 @@
               ></v-autocomplete>
             </v-col>
 
-            <v-col cols="6">
+            <v-col cols="12" sm="6">
               <v-textarea
                 v-model="form.supplier_address"
                 label="Alamat Supplier"
@@ -53,7 +53,7 @@
               ></v-textarea>
             </v-col>
 
-            <v-col cols="6">
+            <v-col cols="12" sm="6">
               <v-textarea
                 v-model="form.po_ship_to"
                 label="Alamat Kirim"
@@ -148,7 +148,7 @@
       <br />
 
       <v-row dense>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-textarea
             v-model="form.po_desc"
             label="Keterangan"
@@ -159,10 +159,10 @@
           ></v-textarea>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <div class="d-flex align-center justify-space-around">
             <b>Subtotal:</b>
-            <b>{{ form.po_sub_total.toLocaleString("id-ID") }}</b>
+            <b>{{ Number(form.po_sub_total).toLocaleString("id-ID") }}</b>
           </div>
 
           <v-text-field
@@ -179,7 +179,7 @@
 
           <div class="d-flex align-center justify-space-around">
             <b>Total Order:</b>
-            <b>{{ form.po_total_order.toLocaleString("id-ID") }}</b>
+            <b>{{ Number(form.po_total_order).toLocaleString("id-ID") }}</b>
           </div>
         </v-col>
       </v-row>

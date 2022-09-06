@@ -122,7 +122,7 @@
           <div class="d-flex justify-space-between align-center">
             <b>Total:</b>
 
-            <b>{{ form.po_amount.toLocaleString("id-ID") }}</b>
+            <b>{{ Number(form.po_amount).toLocaleString("id-ID") }}</b>
           </div>
         </v-form>
 

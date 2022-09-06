@@ -68,6 +68,7 @@ export default {
   data: () => ({
     headers: [
       { text: "ID", value: "id" },
+      { text: "Unit", value: "unit_name" },
       { text: "Brand", value: "brand_component_name" },
       { text: "Komponen", value: "component_name" },
       { text: "Action", value: "action", sortable: false },

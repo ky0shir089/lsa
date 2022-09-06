@@ -14,9 +14,9 @@
 
     <br />
 
-    <v-row>
+    <v-row v-if="action">
       <v-col cols="6">
-        <v-btn block color="primary" :loading="loading" @click="approve_po">
+        <v-btn block color="primary" :loading="loading" @click="doApprove">
           <v-icon left>mdi-check-circle</v-icon>
           approve
         </v-btn>
@@ -29,6 +29,36 @@
         </v-btn>
       </v-col>
     </v-row>
+
+    <div v-if="signpad">
+      <div class="d-flex justify-end mb-2">
+        <v-btn color="pirmary" class="mx-2" @click="undo">
+          <v-icon left>mdi-undo-variant</v-icon> Undo
+        </v-btn>
+
+        <v-btn color="pirmary" class="mx-2" @click="clear">
+          <v-icon left>mdi-eraser</v-icon> Clear
+        </v-btn>
+      </div>
+
+      <VueSignaturePad
+        id="signature"
+        width="100%"
+        height="300px"
+        ref="signaturePad"
+      />
+
+      <v-btn
+        block
+        color="primary"
+        :loading="loading"
+        class="mt-2"
+        @click="approve_po"
+      >
+        <v-icon left>mdi-check-circle</v-icon>
+        approve
+      </v-btn>
+    </div>
 
     <v-dialog v-model="dialog" width="300">
       <v-card>
@@ -65,6 +95,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import Vue from "vue";
+import VueSignaturePad from "vue-signature-pad";
+
+Vue.use(VueSignaturePad);
 
 export default {
   name: "ViewPo",
@@ -83,6 +117,8 @@ export default {
   data: () => ({
     po: {},
     loading: false,
+    action: true,
+    signpad: false,
     dialog: false,
     valid: true,
     po_reject_reason: "",
@@ -109,6 +145,10 @@ export default {
           this.po = data.data[0];
         });
     },
+    doApprove() {
+      this.action = false;
+      this.signpad = true;
+    },
     async approve_po() {
       let r = confirm("Apakah anda yakin akan menyimpan data berikut?");
 
@@ -117,6 +157,7 @@ export default {
 
         let formData = new FormData();
         formData.set("id", this.id);
+        formData.set("signature", this.$refs.signaturePad.saveSignature().data);
 
         await this.axios
           .post("setup-po/v1/approve-po", formData, {
@@ -180,6 +221,20 @@ export default {
           });
       }
     },
+    undo() {
+      this.$refs.signaturePad.undoSignature();
+    },
+    clear() {
+      this.$refs.signaturePad.clearSignature();
+    },
+    save() {
+      // const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+
+      // alert("Open DevTools see the save data.");
+      // console.log(isEmpty);
+      // console.log(data);
+      console.log(this.$refs.signaturePad.saveSignature().data);
+    },
   },
   async created() {
     await this.getPo();
@@ -188,4 +243,12 @@ export default {
 </script>
 
 <style>
+#signature {
+  border: double 3px transparent;
+  border-radius: 5px;
+  background-image: linear-gradient(white, white),
+    radial-gradient(circle at top left, #4bc5e8, #9f6274);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
 </style>

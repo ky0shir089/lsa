@@ -1,11 +1,13 @@
 <template>
   <v-row>
     <v-col cols="12">
+      <h3>List Unit</h3>
+
       <v-simple-table dense>
         <template v-slot:default>
           <thead>
             <tr>
-              <th>Item</th>
+              <th>Unit</th>
               <th>Brand</th>
               <th>Type</th>
               <th>Spesifikasi</th>
@@ -37,7 +39,7 @@
               </td>
 
               <td class="text-right">
-                {{ item.po_amount.toLocaleString("id-ID") }}
+                {{ Number(item.po_amount).toLocaleString("id-ID") }}
               </td>
 
               <td>

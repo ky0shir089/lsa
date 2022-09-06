@@ -31,7 +31,7 @@
             </td>
 
             <td class="text-right font-weight-black">
-              {{ item.component_price.toLocaleString("id-ID") }}
+              {{ Number(item.component_price).toLocaleString("id-ID") }}
             </td>
           </tr>
         </tbody>

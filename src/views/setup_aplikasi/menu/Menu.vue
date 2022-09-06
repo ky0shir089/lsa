@@ -69,6 +69,7 @@ export default {
   data: () => ({
     headers: [
       { text: "Menu ID", value: "id" },
+      { text: "Module", value: "module_name" },
       { text: "Menu", value: "menu_name" },
       { text: "Icon", value: "menu_icon" },
       { text: "Route", value: "menu_route" },

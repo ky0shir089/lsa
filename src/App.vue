@@ -76,6 +76,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+// import OneSignal from "onesignal-vue";
 
 export default {
   name: "App",
@@ -86,6 +87,7 @@ export default {
   data: () => ({
     drawer: false,
     menus: [],
+    onesignal_id: "",
   }),
   computed: {
     ...mapGetters({
@@ -115,8 +117,20 @@ export default {
         .then((response) => {
           let { data } = response.data;
           this.menus = data;
-          this.drawer = true;
+          if (this.$route.name != "NotFound") {
+            this.drawer = true;
+          }
         });
+    },
+    oneSignal() {
+      this.$OneSignal.on("subscriptionChange", function (isSubscribed) {
+        console.log("The user's subscription state is now:", isSubscribed);
+      });
+
+      this.$OneSignal.getUserId().then((userId) => {
+        console.log("OneSignal User ID:", userId);
+        this.onesignal_id = userId;
+      });
     },
     signOut() {
       let r = confirm("Apakah anda yakin akan keluar?");
@@ -134,7 +148,12 @@ export default {
       }
     },
   },
+  beforeCreate() {
+    this.$OneSignal.showSlidedownPrompt();
+  },
   async created() {
+    this.oneSignal();
+
     if (!this.guest && this.user.chpass == "NO") {
       await this.navDrawer();
 

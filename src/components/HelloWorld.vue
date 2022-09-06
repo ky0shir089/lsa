@@ -2,12 +2,6 @@
   <v-container>
     <app-bar />
 
-    <v-app-bar app color="primary" v-if="$vuetify.breakpoint.xs">
-      <v-btn icon dark @click.stop="$router.go(-1)">
-        <v-icon>mdi-arrow-left-circle</v-icon>
-      </v-btn>
-    </v-app-bar>
-
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
@@ -77,6 +71,10 @@
           </a>
         </v-row>
       </v-col>
+
+      <v-col cols="12">
+        <v-btn color="primary" @click="sendNotif">onesignal</v-btn>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -140,5 +138,27 @@ export default {
       },
     ],
   }),
+  methods: {
+    async sendNotif() {
+      let data = {
+        app_id: "7551e8ef-9d84-4cce-898a-ea9f1fc6268e",
+        include_player_ids: ["eea57397-4c5e-4988-88ee-42525d43851a"],
+        contents: {
+          en: "English Message",
+        },
+      };
+
+      await this.axios
+        .post("https://onesignal.com/api/v1/notifications", data, {
+          headers: {
+            Authorization:
+              "Bearer YTVhOTAwYWUtZjA1Zi00NDg0LTkwZTMtODRlMTZkMGE5NTBk",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        });
+    },
+  },
 };
 </script>

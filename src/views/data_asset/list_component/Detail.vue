@@ -77,7 +77,7 @@
               <tr>
                 <td><b>Harga Beli</b></td>
                 <td>
-                  {{ unit.po_price.toLocaleString("id-ID") }}
+                  {{ Number(unit.po_price).toLocaleString("id-ID") }}
                 </td>
               </tr>
             </tbody>

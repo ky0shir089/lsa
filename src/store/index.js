@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VuexPersist from 'vuex-persist'
+import VuexPersistence from 'vuex-persist'
 import alert from '@/store/alert'
 import auth from '@/store/auth'
 import token from '@/store/token'
 import nav from '@/store/nav'
 import draftPo from '@/store/draftPo'
 
-const vuexPersist = new VuexPersist({
+const vuexLocal = new VuexPersistence({
   key: 'lsa',
   storage: sessionStorage
 })
@@ -15,7 +15,7 @@ const vuexPersist = new VuexPersist({
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  plugins: [vuexPersist.plugin],
+  plugins: [vuexLocal.plugin],
   state: {
     prevUrl: '',
   },

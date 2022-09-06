@@ -11,11 +11,10 @@
     <v-data-table
       :headers="headers"
       :items="masters"
-      :items-per-page="20"
       :search="search"
-      :footer-props="{
-        itemsPerPageOptions: [20, -1],
-      }"
+      :options.sync="options"
+      :server-items-length="total"
+      :loading="loading"
       class="elevation-1"
       dense
     >
@@ -38,6 +37,7 @@
             single-line
             hide-details
             slot="extension"
+            @keyup.enter="getMaster"
           ></v-text-field>
         </v-toolbar>
       </template>
@@ -77,13 +77,16 @@ export default {
       { text: "ID", value: "id" },
       { text: "NPK", value: "npk" },
       { text: "Nama", value: "name" },
-      { text: "Role", value: "user_roles" },
-      { text: "IP Address", value: "ipaddress" },
-      { text: "User Agent", value: "useragent" },
+      { text: "Role", value: "user_roles", sortable: false },
+      { text: "IP Address", value: "ipaddress", sortable: false },
+      { text: "User Agent", value: "useragent", sortable: false },
       { text: "Status", value: "status" },
       { text: "Action", value: "action", sortable: false },
     ],
     masters: [],
+    loading: false,
+    total: 0,
+    options: {},
     search: "",
   }),
   computed: {
@@ -91,20 +94,38 @@ export default {
       access_token: "token/token",
     }),
   },
+  watch: {
+    options: {
+      handler() {
+        this.getMaster();
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapActions({
       setAlert: "alert/set",
     }),
     async getMaster() {
+      this.loading = true;
+
       await this.axios
-        .get("user/v1/user", {
+        .get("user/v1/user?page=" + this.options.page, {
           headers: {
             Authorization: "Bearer " + this.access_token,
+          },
+          params: {
+            per_page: this.options.itemsPerPage,
+            sort_by: this.options.sortBy[0],
+            sort_desc: this.options.sortDesc[0] ? "desc" : "asc",
+            search: this.search,
           },
         })
         .then((response) => {
           let { data } = response.data;
-          this.masters = data;
+          this.masters = data.data;
+          this.total = data.total;
+          this.loading = false;
         });
     },
     async destroy(item) {
@@ -139,9 +160,6 @@ export default {
           });
       }
     },
-  },
-  async created() {
-    await this.getMaster();
   },
 };
 </script>

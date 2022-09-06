@@ -94,14 +94,14 @@
               <tr>
                 <td><b>Harga Beli</b></td>
                 <td>
-                  {{ unit.unit_price.toLocaleString("id-ID") }}
+                  {{ Number(unit.unit_price).toLocaleString("id-ID") }}
                 </td>
               </tr>
 
               <tr>
                 <td><b>Ongkos Kirim</b></td>
                 <td>
-                  {{ unit.unit_ongkir.toLocaleString("id-ID") }}
+                  {{ Number(unit.unit_ongkir).toLocaleString("id-ID") }}
                 </td>
               </tr>
             </tbody>

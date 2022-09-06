@@ -10,13 +10,23 @@
                 <td>{{ po.supplier_id }} | {{ po.supplier_name }}</td>
               </tr>
 
-              <tr>
+              <tr v-if="$vuetify.breakpoint.smAndUp">
                 <td><b>Alamat Vendor</b></td>
                 <td><b>Alamat Kirim</b></td>
               </tr>
 
-              <tr>
+              <tr v-if="$vuetify.breakpoint.smAndUp">
                 <td>{{ po.supplier_address }}</td>
+                <td>{{ po.po_ship_to }}</td>
+              </tr>
+
+              <tr v-if="$vuetify.breakpoint.xs">
+                <td><b>Alamat Vendor</b></td>
+                <td>{{ po.supplier_address }}</td>
+              </tr>
+
+              <tr v-if="$vuetify.breakpoint.xs">
+                <td><b>Alamat Kirim</b></td>
                 <td>{{ po.po_ship_to }}</td>
               </tr>
 
@@ -66,6 +76,13 @@
                 <td>{{ po.po_status }}</td>
               </tr>
 
+              <tr v-if="po.po_sign != null">
+                <td><b>Sign</b></td>
+                <td>
+                  <img :src="getImage(po.po_sign)" width="100%" height="96" />
+                </td>
+              </tr>
+
               <tr v-if="po.po_receive_date != null">
                 <td><b>PO Receive Date</b></td>
                 <td>{{ po.po_receive_date }}</td>
@@ -89,7 +106,7 @@
           <template v-slot:default>
             <thead>
               <tr>
-                <th>Item</th>
+                <th>Unit</th>
                 <th>Brand</th>
                 <th>Type</th>
                 <th>Spesifikasi</th>
@@ -131,7 +148,7 @@
                 </td>
 
                 <td class="text-right">
-                  {{ item.po_amount.toLocaleString("id-ID") }}
+                  {{ Number(item.po_amount).toLocaleString("id-ID") }}
                 </td>
               </tr>
             </tbody>
@@ -142,8 +159,8 @@
 
     <br />
 
-    <v-row dense>
-      <v-col cols="6">
+    <v-row dense justify-md="end">
+      <v-col cols="12" sm="6" v-if="po.po_desc != null">
         <v-simple-table dense>
           <template v-slot:default>
             <tbody>
@@ -156,14 +173,14 @@
         </v-simple-table>
       </v-col>
 
-      <v-col cols="6" v-if="Object.keys(po).length > 0">
+      <v-col cols="12" sm="6" v-if="Object.keys(po).length > 0">
         <v-simple-table dense>
           <template v-slot:default>
             <tbody>
               <tr>
                 <td><b>Subtotal</b></td>
                 <td class="text-right">
-                  {{ po.po_sub_total.toLocaleString("id-ID") }}
+                  {{ Number(po.po_sub_total).toLocaleString("id-ID") }}
                 </td>
               </tr>
 
@@ -177,7 +194,7 @@
               <tr>
                 <td><b>Total Order</b></td>
                 <td class="text-right">
-                  {{ po.po_total_order.toLocaleString("id-ID") }}
+                  {{ Number(po.po_total_order).toLocaleString("id-ID") }}
                 </td>
               </tr>
             </tbody>

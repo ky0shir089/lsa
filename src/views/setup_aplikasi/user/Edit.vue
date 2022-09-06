@@ -32,6 +32,18 @@
           ></v-text-field>
 
           <v-autocomplete
+            v-model="form.outlet_id"
+            label="Outlet"
+            :items="outlets"
+            item-text="outlet_name"
+            item-value="id"
+            outlined
+            dense
+            hide-selected
+            :rules="formRules"
+          ></v-autocomplete>
+
+          <v-autocomplete
             v-model="form.chpass"
             label="Reset Password"
             :items="resets"
@@ -67,7 +79,7 @@
         <v-list>
           <v-subheader class="d-flex align-center justify-space-between">
             Role
-            <v-btn icon small color="green" @click="show = true">
+            <v-btn icon small color="green" @click="show = !show">
               <v-icon> mdi-plus-circle </v-icon>
             </v-btn>
           </v-subheader>
@@ -90,13 +102,21 @@
           ></v-autocomplete>
 
           <v-list-item-group color="primary">
-            <v-list-item v-for="item in form.user_roles" :key="item.id">
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ item.role_name }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
+            <template v-for="item in form.user_roles">
+              <v-list-item :key="item.id">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.role_name }}
+                  </v-list-item-title>
+                </v-list-item-content>
+
+                <v-list-item-action-text
+                  @click="update_role(item.id, item.user_role_status)"
+                >
+                  {{ item.user_role_status }}
+                </v-list-item-action-text>
+              </v-list-item>
+            </template>
           </v-list-item-group>
         </v-list>
       </v-col>
@@ -153,7 +173,27 @@ export default {
         })
         .then((response) => {
           let { data } = response.data;
-          this.form = data[0];
+          this.form = data.data[0];
+        });
+    },
+    async getOutlet() {
+      await this.axios
+        .get("network/v1/outlet", {
+          headers: {
+            Authorization: "Bearer " + this.access_token,
+          },
+        })
+        .then((response) => {
+          let { data } = response.data;
+          this.outlets = data;
+        })
+        .catch((error) => {
+          let responses = error.response.data;
+          this.setAlert({
+            status: true,
+            color: "error",
+            text: responses.message,
+          });
         });
     },
     async getRoles() {
@@ -225,7 +265,7 @@ export default {
             color: "success",
             text: data.message,
           });
-          this.show = false
+          this.show = false;
           this.getUsers();
         })
         .catch((error) => {
@@ -238,9 +278,52 @@ export default {
           this.loading = false;
         });
     },
+    async update_role(id, status) {
+      let r = confirm("Apakah anda yakin akan merubah role berikut?");
+
+      if (r) {
+        this.loading = true;
+
+        let formData = new FormData();
+
+        formData.set("id", id);
+        formData.set(
+          "user_role_status",
+          status == "ACTIVE" ? "INACTIVE" : "ACTIVE"
+        );
+
+        await this.axios
+          .post("setup-aplikasi/v1/update-user-role", formData, {
+            headers: {
+              Authorization: "Bearer " + this.access_token,
+            },
+          })
+          .then((response) => {
+            let { data } = response;
+            this.setAlert({
+              status: true,
+              color: "success",
+              text: data.message,
+            });
+            this.show = false;
+            this.loading = false;
+            this.getUsers();
+          })
+          .catch((error) => {
+            let responses = error.response.data;
+            this.setAlert({
+              status: true,
+              color: "error",
+              text: responses.message,
+            });
+            this.loading = false;
+          });
+      }
+    },
   },
   async created() {
     await this.getUsers();
+    await this.getOutlet();
     await this.getRoles();
   },
 };

@@ -76,6 +76,7 @@ export default {
   data: () => ({
     headers: [
       { text: "ID", value: "id" },
+      { text: "Unit", value: "unit_name" },
       { text: "Nama Spesifikasi", value: "info_name" },
       { text: "Action", value: "action", sortable: false },
     ],

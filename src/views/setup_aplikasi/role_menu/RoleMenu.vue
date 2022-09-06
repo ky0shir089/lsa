@@ -70,6 +70,7 @@ export default {
   data: () => ({
     headers: [
       { text: "ID", value: "id" },
+      { text: "Role", value: "role_name" },
       { text: "Menu", value: "menu_name" },
       { text: "Status", value: "rolemenu_status" },
       { text: "Action", value: "action", sortable: false },

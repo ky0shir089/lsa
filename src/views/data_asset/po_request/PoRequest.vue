@@ -35,15 +35,15 @@
       </template>
 
       <template v-slot:item.po_shipping_cost="{ item }">
-        {{ item.po_shipping_cost.toLocaleString("id-ID") }}
+        {{ Number(item.po_shipping_cost).toLocaleString("id-ID") }}
       </template>
 
       <template v-slot:item.po_sub_total="{ item }">
-        {{ item.po_sub_total.toLocaleString("id-ID") }}
+        {{ Number(item.po_sub_total).toLocaleString("id-ID") }}
       </template>
 
       <template v-slot:item.po_total_order="{ item }">
-        {{ item.po_total_order.toLocaleString("id-ID") }}
+        {{ Number(item.po_total_order).toLocaleString("id-ID") }}
       </template>
 
       <template v-slot:item.action="{ item }">

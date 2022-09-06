@@ -1,7 +1,8 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: [
-    'vuetify'
+    'vuetify',
+    'vuex-persist'
   ],
 
   chainWebpack: config => {
@@ -15,5 +16,9 @@ module.exports = defineConfig({
     config
       .output
       .filename('[name].[fullhash].bundle.js')
+  },
+
+  css: {
+    extract: { ignoreOrder: true },
   },
 })

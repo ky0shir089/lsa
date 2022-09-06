@@ -42,7 +42,7 @@
       </template>
 
       <template v-slot:item.po_price="{ item }">
-        {{ item.unit_amount.toLocaleString("id-ID") }}
+        {{ Number(item.unit_amount).toLocaleString("id-ID") }}
       </template>
 
       <template v-slot:item.action="{ item }">

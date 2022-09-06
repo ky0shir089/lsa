@@ -30,6 +30,18 @@
           ></v-text-field>
 
           <v-autocomplete
+            v-model="form.outlet_id"
+            label="Outlet"
+            :items="outlets"
+            item-text="outlet_name"
+            item-value="id"
+            outlined
+            dense
+            hide-selected
+            :rules="formRules"
+          ></v-autocomplete>
+
+          <v-autocomplete
             v-model="form.role_id"
             label="Role"
             :items="roles"
@@ -83,10 +95,12 @@ export default {
     form: {
       npk: "",
       name: "",
+      outlet_id: "",
       role_id: [],
       status: "",
     },
     formRules: [(v) => !!v || "Field is required"],
+    outlets: [],
     roles: [],
     status: ["ACTIVE", "INACTIVE"],
     loading: false,
@@ -100,6 +114,26 @@ export default {
     ...mapActions({
       setAlert: "alert/set",
     }),
+    async getOutlet() {
+      await this.axios
+        .get("network/v1/outlet", {
+          headers: {
+            Authorization: "Bearer " + this.access_token,
+          },
+        })
+        .then((response) => {
+          let { data } = response.data;
+          this.outlets = data;
+        })
+        .catch((error) => {
+          let responses = error.response.data;
+          this.setAlert({
+            status: true,
+            color: "error",
+            text: responses.message,
+          });
+        });
+    },
     async getRoles() {
       await this.axios
         .get("setup-aplikasi/v1/role", {
@@ -120,7 +154,7 @@ export default {
       formData.set("npk", this.form.npk);
       formData.set("name", this.form.name.toUpperCase());
       formData.set("role_id", this.form.role_id[0]);
-      formData.set("outlet_id", 1);
+      formData.set("outlet_id", this.form.outlet_id);
       formData.set("status", this.form.status);
 
       await this.axios
@@ -177,6 +211,7 @@ export default {
     },
   },
   async created() {
+    await this.getOutlet();
     await this.getRoles();
   },
 };

@@ -46,7 +46,7 @@
             </td>
 
             <td>
-              {{ item.mt_price.toLocaleString("id-ID") }}
+              {{ Number(item.mt_price).toLocaleString("id-ID") }}
             </td>
           </tr>
         </tbody>

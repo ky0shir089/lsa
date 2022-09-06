@@ -682,7 +682,7 @@ const routes = [
     }
   },
   {
-    path: '/:pathMatch(.*)*',
+    path: '/:catchAll(.*)',
     name: 'NotFound',
     component: () => import(/* webpackChunkName: "NotFound" */ '../components/NotFound.vue')
   },

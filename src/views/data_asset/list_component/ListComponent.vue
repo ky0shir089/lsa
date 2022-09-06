@@ -48,7 +48,7 @@
       </template>
 
       <template v-slot:item.component_price="{ item }">
-        {{ item.component_price.toLocaleString("id-ID") }}
+        {{ Number(item.component_price).toLocaleString("id-ID") }}
       </template>
 
       <template v-slot:item.action="{ item }">
